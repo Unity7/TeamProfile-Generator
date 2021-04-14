@@ -113,7 +113,7 @@ const engineerQuestions = [
 ];
 
 //Intern Questions: name | id | email | School
-const engineerQuestions = [
+const internQuestions = [
   {
     type: "input",
     name: "name",
@@ -167,3 +167,8 @@ const engineerQuestions = [
     },
   },
 ];
+
+//array to store the objects for each instance of an array. Function managerAsk to add object to this array
+const managerArray = [];
+const internArray = [];
+const engineerArray = [];
