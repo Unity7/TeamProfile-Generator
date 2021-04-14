@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-
+const stageCounter = 0;
 //Manager Questions: name | id | email | office
 const managerQuestions = [
   {
@@ -30,7 +30,7 @@ const managerQuestions = [
   },
   {
     type: "input",
-    name: "id",
+    name: "email",
     message: "Enter your email address",
     validate: (nameInput) => {
       if (nameInput) {
@@ -86,7 +86,7 @@ const engineerQuestions = [
   },
   {
     type: "input",
-    name: "id",
+    name: "email",
     message: "Enter your employee's email address",
     validate: (nameInput) => {
       if (nameInput) {
@@ -99,7 +99,7 @@ const engineerQuestions = [
   },
   {
     type: "input",
-    name: "office",
+    name: "username",
     message: "Enter your employee's GitHub username",
     validate: (nameInput) => {
       if (nameInput) {
@@ -142,7 +142,7 @@ const internQuestions = [
   },
   {
     type: "input",
-    name: "id",
+    name: "email",
     message: "Enter your intern's email address",
     validate: (nameInput) => {
       if (nameInput) {
@@ -155,7 +155,7 @@ const internQuestions = [
   },
   {
     type: "input",
-    name: "office",
+    name: "school",
     message: "Enter your intern's school",
     validate: (nameInput) => {
       if (nameInput) {
@@ -172,3 +172,22 @@ const internQuestions = [
 const managerArray = [];
 const internArray = [];
 const engineerArray = [];
+
+//function to prompt inqurier to ask managerQuestions
+function askManagerQuestions(questions) {
+  //user inquirier to prompt questions
+  //return an object and push object into managerArray
+  //
+}
+
+//function to prompt inqurier to ask engineerQuestions
+function askEngineerQuestions(questions) {
+  //user inquirier to prompt questions
+  //return an object and push object into engineerArray
+}
+
+//function to prompt inqurier to ask engineerQuestions
+function askInternQuestions(questions) {
+  //user inquirier to prompt questions
+  //return an object and push object into internArray
+}
