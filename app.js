@@ -179,12 +179,19 @@ const engineerArray = [];
 function askManagerQuestions(questions) {
   //user inquirier to prompt questions
   inquirer.prompt(questions).then((response) => {
-    const manager = {};
+    var manager = {};
+    // for (var prop in response) {
+    //   if (manager.hasOwnProperty(prop)) {
+    //     this[prop] = manager[prop];
+    //   }
+    // }
+    // console.log(manager);
     manager.name = response.name;
     manager.email = response.email;
     manager.id = response.id;
     manager.office = response.office;
     managerArray.push(manager);
+    console.log(managerArray);
   });
   //return an object and push object into managerArray
 }
