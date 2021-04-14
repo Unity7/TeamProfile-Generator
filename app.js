@@ -1,4 +1,6 @@
 const inquirer = require("inquirer");
+const { writeFile, copyFile } = require("./lib/generate-site");
+
 const stageCounter = 0;
 //Manager Questions: name | id | email | office
 const managerQuestions = [
@@ -176,8 +178,15 @@ const engineerArray = [];
 //function to prompt inqurier to ask managerQuestions
 function askManagerQuestions(questions) {
   //user inquirier to prompt questions
+  inquirer.prompt(questions).then((response) => {
+    const manager = {};
+    manager.name = response.name;
+    manager.email = response.email;
+    manager.id = response.id;
+    manager.office = response.office;
+    managerArray.push(manager);
+  });
   //return an object and push object into managerArray
-  //
 }
 
 //function to prompt inqurier to ask engineerQuestions
@@ -191,3 +200,35 @@ function askInternQuestions(questions) {
   //user inquirier to prompt questions
   //return an object and push object into internArray
 }
+
+//function to prompt inqurier to ask engineerQuestions
+function generateHTML(manager, engineer, intern) {
+  //user inquirier to prompt questions
+  //return an object and push object into internArray
+}
+
+// -------------------------- MAIN FLOW SECTION-------------------------- //
+
+//prompt user to enter manager information
+askManagerQuestions(managerQuestions);
+//prompt user to enter engineer information
+//   .then(askEngineerQuestions(engineerQuestions))
+
+//prompt user to enter intern information
+//   .then(askInternQuestions(internQuestions))
+
+//generate HTML string using Employee type arrays
+//   .then((fullCompanyInfo) => {
+//     return generateHTML(managerArray, engineerArray, internArray);
+//   })
+
+//use the returned HTML string to write the html file into dist director
+//   .then((htmlResponse) => {
+//     return writeFile(htmlResponse);
+//   })
+
+//copy the css file into the dist directory in style to index.html file
+//   .then((writeFileResponse) => {
+//     return copyFile();
+//   });
+//prompt user to enter intern information
