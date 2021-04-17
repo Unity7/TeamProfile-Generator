@@ -1,7 +1,16 @@
+const { TestScheduler } = require("@jest/core");
 const inquirer = require("inquirer");
 const { writeFile, copyFile } = require("./lib/generate-site");
+const templateData = require("./lib/template.js");
 
-const stageCounter = 0;
+var cardsOutput = "";
+var html = "";
+const mainQuestion = {
+  type: "list",
+  name: "employee",
+  message: "Select employee to add.",
+  choices: ["Engineer", "Intern", "Done..."],
+};
 //Manager Questions: name | id | email | office
 const managerQuestions = [
   {
@@ -112,6 +121,12 @@ const engineerQuestions = [
       }
     },
   },
+  {
+    type: "confirm",
+    name: "addAnother",
+    message: "Would you like to enter another engineer?",
+    default: false,
+  },
 ];
 
 //Intern Questions: name | id | email | School
@@ -168,6 +183,12 @@ const internQuestions = [
       }
     },
   },
+  {
+    type: "confirm",
+    name: "addAnother",
+    message: "Would you like to enter another intern?",
+    default: false,
+  },
 ];
 
 //array to store the objects for each instance of an array. Function managerAsk to add object to this array
@@ -175,67 +196,188 @@ const managerArray = [];
 const internArray = [];
 const engineerArray = [];
 
+//function to set answers question to object to be pushed into array
+function answerQuestions(response) {
+  //create manager object to store input
+  var obj = {};
+
+  //loop through reponse to store response into manager object
+  for (var prop in response) {
+    obj[prop] = response[prop];
+  }
+
+  if (obj.office) {
+    managerArray.push(obj);
+  } else if (obj.username) {
+    engineerArray.push(obj);
+  } else if (obj.school) {
+    internArray.push(obj);
+  }
+
+  //push manager object into managerArray
+}
+
+function askQ(data) {
+  return inquirer.prompt(data);
+}
+
+const askManager = () => {
+  return inquirer.prompt(managerQuestions);
+};
+// const askIntern = () => {
+//   return inquirer.prompt(internQuestions);
+// };
 //function to prompt inqurier to ask managerQuestions
-function askManagerQuestions(questions) {
-  //user inquirier to prompt questions
-  inquirer.prompt(questions).then((response) => {
-    var manager = {};
-    // for (var prop in response) {
-    //   if (manager.hasOwnProperty(prop)) {
-    //     this[prop] = manager[prop];
-    //   }
-    // }
-    // console.log(manager);
-    manager.name = response.name;
-    manager.email = response.email;
-    manager.id = response.id;
-    manager.office = response.office;
-    managerArray.push(manager);
-    console.log(managerArray);
+// function askIntern() {
+//   askQ(internQuestions).then((answers) => {
+//     if (answers.addAnother) {
+//       answerQuestions(answers);
+//       return askIntern();
+//     } else {
+//       answerQuestions(answers);
+//       return
+//     }
+//   });
+
+function askIntern(questions) {
+  askQ(questions).then((answers) => {
+    if (answers.addAnother) {
+      answerQuestions(answers);
+      return askIntern(questions);
+    } else {
+      answerQuestions(answers);
+      console.log(managerArray, engineerArray, internArray);
+      templateData.generateHTML(managerArray, engineerArray, internArray);
+    }
   });
-  //return an object and push object into managerArray
 }
 
-//function to prompt inqurier to ask engineerQuestions
-function askEngineerQuestions(questions) {
-  //user inquirier to prompt questions
-  //return an object and push object into engineerArray
+//function to prompt inqurier to ask managerQuestions
+function askEmployeeQuestions(questions) {
+  askQ(questions).then((answers) => {
+    if (answers.employee == "Done...") {
+      console.log(managerArray, engineerArray, internArray);
+      html = templateData.generateHTML(
+        managerArray,
+        engineerArray,
+        internArray
+      );
+      console.log(html);
+
+      console.log("generate Html and return it");
+    } else if (answers.employee == "Intern") {
+      askQ(internQuestions).then((answerChained) => {
+        if (answerChained.addAnother) {
+          answerQuestions(answerChained);
+          return askEmployeeQuestions(questions);
+        } else {
+          answerQuestions(answerChained);
+          console.log(managerArray, engineerArray, internArray);
+          return templateData.generateHTML(
+            managerArray,
+            engineerArray,
+            internArray
+          );
+        }
+      });
+    } else if (answers.employee == "Engineer") {
+      askQ(engineerQuestions).then((answerChainedEng) => {
+        if (answerChainedEng.addAnother) {
+          answerQuestions(answerChainedEng);
+          return askEmployeeQuestions(questions);
+        } else {
+          answerQuestions(answerChainedEng);
+          console.log(managerArray, engineerArray, internArray);
+
+          return templateData.generateHTML(
+            managerArray,
+            engineerArray,
+            internArray
+          );
+        }
+      });
+    }
+  });
+  // //function to prompt inqurier to ask managerQuestions
+  // function askEngineer(questions) {
+  //   askQ(questions).then((answers) => {
+  //     if (answers.addAnother) {
+  //       answerQuestions(answers);
+  //       return askEngineer(questions);
+  //     } else {
+  //       answerQuestions(answers);
+  //       return askIntern(internQuestions);
+  //     }
+  //   });
+  // return new Promise((resolve, reject) => {
+  //   askQ(questions).then((answers) => {
+  //     if (answers.addAnother) {
+  //       return askQuestions(questions);
+  //     } else {
+  //       return answers;
+  //     }
+  //   });
+
+  //   resolve(console.log("hello"));
+  //   reject("failed");
+  // });
 }
 
-//function to prompt inqurier to ask engineerQuestions
-function askInternQuestions(questions) {
-  //user inquirier to prompt questions
-  //return an object and push object into internArray
-}
-
-//function to prompt inqurier to ask engineerQuestions
-function generateHTML(manager, engineer, intern) {
-  //user inquirier to prompt questions
-  //return an object and push object into internArray
-}
+//function to prompt inqurier to ask managerQuestions
+// function askEngineer(questions) {
+//   askQ(questions).then((answers) => {
+//     if (answers.addAnother) {
+//       answerQuestions(answers);
+//       return askEngineer(questions);
+//     } else {
+//       answerQuestions(answers);
+//       return askIntern(internQuestions);
+//     }
+//   });
+// }
 
 // -------------------------- MAIN FLOW SECTION-------------------------- //
 
+askManager().then((res) => {
+  answerQuestions(res);
+  askEmployeeQuestions(mainQuestion);
+});
+
 //prompt user to enter manager information
-askManagerQuestions(managerQuestions);
-//prompt user to enter engineer information
-//   .then(askEngineerQuestions(engineerQuestions))
 
-//prompt user to enter intern information
-//   .then(askInternQuestions(internQuestions))
-
-//generate HTML string using Employee type arrays
-//   .then((fullCompanyInfo) => {
-//     return generateHTML(managerArray, engineerArray, internArray);
-//   })
-
-//use the returned HTML string to write the html file into dist director
-//   .then((htmlResponse) => {
-//     return writeFile(htmlResponse);
-//   })
-
-//copy the css file into the dist directory in style to index.html file
-//   .then((writeFileResponse) => {
-//     return copyFile();
+// async function askQuestions(data) {
+//   askQ(data).then((promptAnswer) => {
+//     if (promptAnswer.addAnother) {
+//       answerQuestions(promptAnswer);
+//       return askQuestions(data);
+//     } else {
+//       return askQuestions(internQuestions);
+//     }
 //   });
-//prompt user to enter intern information
+// }
+// async function ask() {
+//   const manager = await askManager();
+//   answerQuestions(manager);
+//   const engineer = await askQ(engineerQuestions);
+//   answerQuestions(engineer);
+//   if (engineer.addAnother == true) {
+//     askQ(engineerQuestions);
+//   }
+//   const intern = await askQ(internQuestions);
+//   answerQuestions(intern);
+//   if (intern.addAnother == true) {
+//     askQ(internrQuestions);
+//   }
+//   return;
+//   // const intern = await askQuestions(internQuestions);
+//   // const results = await console.log(managerArray, engineerArray, internArray);
+// }
+
+// async function ask() {
+//   const manager = await askManager();
+//   await answerQuestions(manager);
+//   await askEngineer(engineerQuestions);
+//   // const intern = await askQuestions(internQuestions);
+//   // const results = await console.log(managerArray, engineerArray, internArray);
+// }
+// ask();
