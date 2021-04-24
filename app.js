@@ -124,7 +124,7 @@ const engineerQuestions = [
   {
     type: "confirm",
     name: "addAnother",
-    message: "Would you like to enter another engineer?",
+    message: "Would you like to enter another employee?",
     default: false,
   },
 ];
@@ -186,7 +186,7 @@ const internQuestions = [
   {
     type: "confirm",
     name: "addAnother",
-    message: "Would you like to enter another intern?",
+    message: "Would you like to enter another employee?",
     default: false,
   },
 ];
@@ -255,86 +255,60 @@ function askIntern(questions) {
 //function to prompt inqurier to ask managerQuestions
 function askEmployeeQuestions(questions) {
   askQ(questions).then((answers) => {
+    //if user selects "Done..." after creating a manager or employee
     if (answers.employee == "Done...") {
-      console.log(managerArray, engineerArray, internArray);
       html = templateData.generateHTML(
         managerArray,
         engineerArray,
         internArray
       );
-      console.log(html);
-
-      console.log("generate Html and return it");
+      copyFile();
+      writeFile(html);
+      console.log("File created in dist folder");
+      //if user selects to create a new Intern employee
     } else if (answers.employee == "Intern") {
       askQ(internQuestions).then((answerChained) => {
         if (answerChained.addAnother) {
           answerQuestions(answerChained);
           return askEmployeeQuestions(questions);
         } else {
+          //if user selects to "NO"" to creating another employee
           answerQuestions(answerChained);
-          console.log(managerArray, engineerArray, internArray);
-          return templateData.generateHTML(
+
+          html = templateData.generateHTML(
             managerArray,
             engineerArray,
             internArray
           );
+          copyFile();
+          writeFile(html);
+          console.log("File created in dist folder");
         }
       });
+      //if user selects to create a new Engineer employee
     } else if (answers.employee == "Engineer") {
       askQ(engineerQuestions).then((answerChainedEng) => {
         if (answerChainedEng.addAnother) {
           answerQuestions(answerChainedEng);
           return askEmployeeQuestions(questions);
+
+          //if user selects to "NO"" to creating another employee
         } else {
           answerQuestions(answerChainedEng);
-          console.log(managerArray, engineerArray, internArray);
 
-          return templateData.generateHTML(
+          html = templateData.generateHTML(
             managerArray,
             engineerArray,
             internArray
           );
+          copyFile();
+          writeFile(html);
+          console.log("File created in dist folder");
         }
       });
     }
   });
-  // //function to prompt inqurier to ask managerQuestions
-  // function askEngineer(questions) {
-  //   askQ(questions).then((answers) => {
-  //     if (answers.addAnother) {
-  //       answerQuestions(answers);
-  //       return askEngineer(questions);
-  //     } else {
-  //       answerQuestions(answers);
-  //       return askIntern(internQuestions);
-  //     }
-  //   });
-  // return new Promise((resolve, reject) => {
-  //   askQ(questions).then((answers) => {
-  //     if (answers.addAnother) {
-  //       return askQuestions(questions);
-  //     } else {
-  //       return answers;
-  //     }
-  //   });
-
-  //   resolve(console.log("hello"));
-  //   reject("failed");
-  // });
 }
-
-//function to prompt inqurier to ask managerQuestions
-// function askEngineer(questions) {
-//   askQ(questions).then((answers) => {
-//     if (answers.addAnother) {
-//       answerQuestions(answers);
-//       return askEngineer(questions);
-//     } else {
-//       answerQuestions(answers);
-//       return askIntern(internQuestions);
-//     }
-//   });
-// }
 
 // -------------------------- MAIN FLOW SECTION-------------------------- //
 
@@ -342,42 +316,3 @@ askManager().then((res) => {
   answerQuestions(res);
   askEmployeeQuestions(mainQuestion);
 });
-
-//prompt user to enter manager information
-
-// async function askQuestions(data) {
-//   askQ(data).then((promptAnswer) => {
-//     if (promptAnswer.addAnother) {
-//       answerQuestions(promptAnswer);
-//       return askQuestions(data);
-//     } else {
-//       return askQuestions(internQuestions);
-//     }
-//   });
-// }
-// async function ask() {
-//   const manager = await askManager();
-//   answerQuestions(manager);
-//   const engineer = await askQ(engineerQuestions);
-//   answerQuestions(engineer);
-//   if (engineer.addAnother == true) {
-//     askQ(engineerQuestions);
-//   }
-//   const intern = await askQ(internQuestions);
-//   answerQuestions(intern);
-//   if (intern.addAnother == true) {
-//     askQ(internrQuestions);
-//   }
-//   return;
-//   // const intern = await askQuestions(internQuestions);
-//   // const results = await console.log(managerArray, engineerArray, internArray);
-// }
-
-// async function ask() {
-//   const manager = await askManager();
-//   await answerQuestions(manager);
-//   await askEngineer(engineerQuestions);
-//   // const intern = await askQuestions(internQuestions);
-//   // const results = await console.log(managerArray, engineerArray, internArray);
-// }
-// ask();
