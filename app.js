@@ -17,7 +17,7 @@ const managerQuestions = [
     type: "input",
     name: "name",
     message: "What is your first and last name?",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -30,7 +30,7 @@ const managerQuestions = [
     type: "input",
     name: "id",
     message: "Enter your employee ID",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -43,7 +43,7 @@ const managerQuestions = [
     type: "input",
     name: "email",
     message: "Enter your email address",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -56,7 +56,7 @@ const managerQuestions = [
     type: "input",
     name: "office",
     message: "Enter your office number",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -73,7 +73,7 @@ const engineerQuestions = [
     type: "input",
     name: "name",
     message: "What is your engineer's first and last name?",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -86,7 +86,7 @@ const engineerQuestions = [
     type: "input",
     name: "id",
     message: "Enter your employee's ID",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -99,7 +99,7 @@ const engineerQuestions = [
     type: "input",
     name: "email",
     message: "Enter your employee's email address",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -112,7 +112,7 @@ const engineerQuestions = [
     type: "input",
     name: "username",
     message: "Enter your employee's GitHub username",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -135,7 +135,7 @@ const internQuestions = [
     type: "input",
     name: "name",
     message: "What is your intern's first and last name?",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -148,7 +148,7 @@ const internQuestions = [
     type: "input",
     name: "id",
     message: "Enter your intern's ID",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -161,7 +161,7 @@ const internQuestions = [
     type: "input",
     name: "email",
     message: "Enter your intern's email address",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -174,7 +174,7 @@ const internQuestions = [
     type: "input",
     name: "school",
     message: "Enter your intern's school",
-    validate: (nameInput) => {
+    validate: nameInput => {
       if (nameInput) {
         return true;
       } else {
@@ -224,23 +224,9 @@ function askQ(data) {
 const askManager = () => {
   return inquirer.prompt(managerQuestions);
 };
-// const askIntern = () => {
-//   return inquirer.prompt(internQuestions);
-// };
-//function to prompt inqurier to ask managerQuestions
-// function askIntern() {
-//   askQ(internQuestions).then((answers) => {
-//     if (answers.addAnother) {
-//       answerQuestions(answers);
-//       return askIntern();
-//     } else {
-//       answerQuestions(answers);
-//       return
-//     }
-//   });
 
 function askIntern(questions) {
-  askQ(questions).then((answers) => {
+  askQ(questions).then(answers => {
     if (answers.addAnother) {
       answerQuestions(answers);
       return askIntern(questions);
@@ -254,7 +240,7 @@ function askIntern(questions) {
 
 //function to prompt inqurier to ask managerQuestions
 function askEmployeeQuestions(questions) {
-  askQ(questions).then((answers) => {
+  askQ(questions).then(answers => {
     //if user selects "Done..." after creating a manager or employee
     if (answers.employee == "Done...") {
       html = templateData.generateHTML(
@@ -267,7 +253,7 @@ function askEmployeeQuestions(questions) {
       console.log("File created in dist folder");
       //if user selects to create a new Intern employee
     } else if (answers.employee == "Intern") {
-      askQ(internQuestions).then((answerChained) => {
+      askQ(internQuestions).then(answerChained => {
         if (answerChained.addAnother) {
           answerQuestions(answerChained);
           return askEmployeeQuestions(questions);
@@ -287,7 +273,7 @@ function askEmployeeQuestions(questions) {
       });
       //if user selects to create a new Engineer employee
     } else if (answers.employee == "Engineer") {
-      askQ(engineerQuestions).then((answerChainedEng) => {
+      askQ(engineerQuestions).then(answerChainedEng => {
         if (answerChainedEng.addAnother) {
           answerQuestions(answerChainedEng);
           return askEmployeeQuestions(questions);
@@ -312,7 +298,7 @@ function askEmployeeQuestions(questions) {
 
 // -------------------------- MAIN FLOW SECTION-------------------------- //
 
-askManager().then((res) => {
+askManager().then(res => {
   answerQuestions(res);
   askEmployeeQuestions(mainQuestion);
 });
